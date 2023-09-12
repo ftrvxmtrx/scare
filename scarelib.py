@@ -667,9 +667,17 @@ class scaremu:
         except Exception as e:
             self.errPrint("printRegs",e)
         return
+    def getReg(self, regname):
+        arch = self.arch_name
+        if not regname in rNames[arch]:
+            if arch == "arm64":
+                arch = "neon"
+            elif arch == "x86" or arch == "x64":
+                arch = "xmm"
+        return rNames[arch][regname]
     def readReg(self, regname):
         try:
-            reg_val = rNames[self.arch_name][regname]
+            reg_val = self.getReg(regname)
             if reg_val:
                 reg_out = self.mu_ctx.reg_read(reg_val)
                 return reg_out
