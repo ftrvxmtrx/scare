@@ -250,7 +250,10 @@ if __name__ == '__main__':
     while True:
         try:
             cmd = input(f"[{cArchP}{currentArch}]{cIP}{currentAddr:02x}{cEnd}> ")
-            shouldAsm = parseCmd(cmd, smu)
+            try:
+                shouldAsm = parseCmd(cmd, smu)
+            except:
+                continue
             if ( smu == False ) and (sConfig["emu/arch"] != "NoArch"): 
                 smu = scaremu(sConfig["emu/arch"])
                 currentArch = sConfig["emu/arch"]
