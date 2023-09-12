@@ -4,6 +4,7 @@ sConfig = {
     "emu/memsize":   0x200000,
     "emu/arch" : "NoArch",
     "x86/xmm": 0,
+    "arm64/neon": 0,
 }
 
 #### Colors

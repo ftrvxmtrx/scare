@@ -67,6 +67,7 @@ NOTE: Run /reset if you are changing emu/* options, otherwise the emulator may n
 /c emu/arch      -- Print Arch Value
 /c emu/arch x64  -- Set Arch to x64
 /c x86/xmm 1     -- Enable x86/xmm
+/c arm64/neon 1  -- Enable arm64/neon
 """
 
 
@@ -126,6 +127,40 @@ rNames = {
         "sp":  UC_ARM64_REG_SP,
         "pc":  UC_ARM64_REG_PC,
         "cpsr":  UC_ARM_REG_CPSR,
+    },
+    "neon": {
+        "v0" : UC_ARM64_REG_V0,
+        "v1" : UC_ARM64_REG_V1,
+        "v2" : UC_ARM64_REG_V2,
+        "v3" : UC_ARM64_REG_V3,
+        "v4" : UC_ARM64_REG_V4,
+        "v5" : UC_ARM64_REG_V5,
+        "v6" : UC_ARM64_REG_V6,
+        "v7" : UC_ARM64_REG_V7,
+        "v8" : UC_ARM64_REG_V8,
+        "v9" : UC_ARM64_REG_V9,
+        "v10": UC_ARM64_REG_V10,
+        "v11": UC_ARM64_REG_V11,
+        "v12": UC_ARM64_REG_V12,
+        "v13": UC_ARM64_REG_V13,
+        "v14": UC_ARM64_REG_V14,
+        "v15": UC_ARM64_REG_V15,
+        "v16": UC_ARM64_REG_V16,
+        "v17": UC_ARM64_REG_V17,
+        "v18": UC_ARM64_REG_V18,
+        "v19": UC_ARM64_REG_V19,
+        "v20": UC_ARM64_REG_V20,
+        "v21": UC_ARM64_REG_V21,
+        "v22": UC_ARM64_REG_V22,
+        "v23": UC_ARM64_REG_V23,
+        "v24": UC_ARM64_REG_V24,
+        "v25": UC_ARM64_REG_V25,
+        "v26": UC_ARM64_REG_V26,
+        "v27": UC_ARM64_REG_V27,
+        "v28": UC_ARM64_REG_V28,
+        "v29": UC_ARM64_REG_V29,
+        "v30": UC_ARM64_REG_V30,
+        "v31": UC_ARM64_REG_V31,
     },
     "x86": {
         "eax": UC_X86_REG_EAX,
@@ -249,6 +284,26 @@ def printRegs_arm64(mu, sConfig):
     print(f"{cRegN}x28: {regFmt(mu,0,64,rNames['arm64']['x28'])} {cRegN} x29: {regFmt(mu,0,64,rNames['arm64']['x29'])} {cRegN} x30: {regFmt(mu,0,64,rNames['arm64']['x30'])} {cRegN}  sp: {regFmt(mu,2,64,rNames['arm64']['sp'] )}")
     print(f"{cRegN} pc: {regFmt(mu,1,64,rNames['arm64']['pc'] )} {cRegN}cpsr: {regFmt(mu,0,64,rNames['arm64']['cpsr'])}")
     print(cEnd,end="")
+    if sConfig["arm64/neon"]:
+        printRegs_NEON(mu, sConfig)
+
+def printRegs_NEON(mu, sConfig):
+    print(f"{cRegN} v0: {regFmt(mu,0,128,rNames['neon']['v0'] )} {cRegN}v16: {regFmt(mu,0,128,rNames['neon']['v16'])}")
+    print(f"{cRegN} v1: {regFmt(mu,0,128,rNames['neon']['v1'] )} {cRegN}v17: {regFmt(mu,0,128,rNames['neon']['v17'])}")
+    print(f"{cRegN} v2: {regFmt(mu,0,128,rNames['neon']['v2'] )} {cRegN}v18: {regFmt(mu,0,128,rNames['neon']['v18'])}")
+    print(f"{cRegN} v3: {regFmt(mu,0,128,rNames['neon']['v3'] )} {cRegN}v19: {regFmt(mu,0,128,rNames['neon']['v19'])}")
+    print(f"{cRegN} v4: {regFmt(mu,0,128,rNames['neon']['v4'] )} {cRegN}v20: {regFmt(mu,0,128,rNames['neon']['v20'])}")
+    print(f"{cRegN} v5: {regFmt(mu,0,128,rNames['neon']['v5'] )} {cRegN}v21: {regFmt(mu,0,128,rNames['neon']['v21'])}")
+    print(f"{cRegN} v6: {regFmt(mu,0,128,rNames['neon']['v6'] )} {cRegN}v22: {regFmt(mu,0,128,rNames['neon']['v22'])}")
+    print(f"{cRegN} v7: {regFmt(mu,0,128,rNames['neon']['v7'] )} {cRegN}v23: {regFmt(mu,0,128,rNames['neon']['v23'])}")
+    print(f"{cRegN} v8: {regFmt(mu,0,128,rNames['neon']['v8'] )} {cRegN}v24: {regFmt(mu,0,128,rNames['neon']['v24'])}")
+    print(f"{cRegN} v9: {regFmt(mu,0,128,rNames['neon']['v9'] )} {cRegN}v25: {regFmt(mu,0,128,rNames['neon']['v25'])}")
+    print(f"{cRegN}v10: {regFmt(mu,0,128,rNames['neon']['v10'])} {cRegN}v26: {regFmt(mu,0,128,rNames['neon']['v26'])}")
+    print(f"{cRegN}v11: {regFmt(mu,0,128,rNames['neon']['v11'])} {cRegN}v27: {regFmt(mu,0,128,rNames['neon']['v27'])}")
+    print(f"{cRegN}v12: {regFmt(mu,0,128,rNames['neon']['v12'])} {cRegN}v28: {regFmt(mu,0,128,rNames['neon']['v28'])}")
+    print(f"{cRegN}v13: {regFmt(mu,0,128,rNames['neon']['v13'])} {cRegN}v29: {regFmt(mu,0,128,rNames['neon']['v29'])}")
+    print(f"{cRegN}v14: {regFmt(mu,0,128,rNames['neon']['v14'])} {cRegN}v30: {regFmt(mu,0,128,rNames['neon']['v30'])}")
+    print(f"{cRegN}v15: {regFmt(mu,0,128,rNames['neon']['v15'])} {cRegN}v31: {regFmt(mu,0,128,rNames['neon']['v31'])}")
 
 def printRegs_x86(mu, sConfig):
     print(f"{cRegN}eax: {regFmt(mu,0,32,rNames['x86']['eax'])}")
