@@ -135,6 +135,23 @@ def parseCmd(cmd, smu):
             else:
                 print("Usage: /read {0xaddress|$register} size")
 
+        if cmdList[0] == "/write":
+            if cmdListLen == 3:
+                try:
+                    data = bytes.fromhex(cmdList[2])
+                    if cmdList[1][0] == "$":
+                        regTarget = cmdList[1].split("$")[1]
+                        regValue = smu.readReg(regTarget)
+                        if regValue is not None:
+                            smu.mu_ctx.mem_write(regValue, data)
+                    else:
+                        memout = smu.mu_ctx.mem_write(int(cmdList[1],0), data)
+                except Exception as e:
+                    print(e)
+                    print("Usage: /write {0xaddress|$register} hexdata")
+            else:
+                print("Usage: /write {0xaddress|$register} hexdata")
+
         if cmdList[0] == "/set":
             if cmdListLen == 3:
                 try:

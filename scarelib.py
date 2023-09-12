@@ -41,26 +41,27 @@ Simple Configurable Asm REPL && Emulator
 helpfile = """
 scare Help
 
-/ /? /help                        -- Open help menu
-/x /exit /q /quit                 -- Quit the program
+/ /? /help                           -- Open help menu
+/x /exit /q /quit                    -- Quit the program
 
-/back n                           -- Go back n number of lines
-/dis {0xaddress|$register} NUM    -- Disassemble NUM bytes from 0xaddress or $register
-/export FILETYPE FILENAME         -- Export machine code as FILETYPE to the FILENAME
-                                     FILETYPE List:
-                                     - bin
-                                     - elf64
-                                     - pe32
-/info                             -- Info about the emulator state
-/l /list                          -- List the current program
-/load file.asm                    -- Load listing from file.asm (overwrites current program)
-/read {0xaddress|$register} NUM   -- Read NUM bytes from 0xaddress or $register
-/regs                             -- Print register state
-/get register [register... ]      -- Print register state
-/set register value               -- Set a register
-/reset                            -- Reset the emulator to a clean state
-/run                              -- Run the current program
-/save file.asm                    -- Save assembly output to file.asm
+/back n                              -- Go back n number of lines
+/dis {0xaddress|$register} NUM       -- Disassemble NUM bytes from 0xaddress or $register
+/export FILETYPE FILENAME            -- Export machine code as FILETYPE to the FILENAME
+                                        FILETYPE List:
+                                        - bin
+                                        - elf64
+                                        - pe32
+/info                                -- Info about the emulator state
+/l /list                             -- List the current program
+/load file.asm                       -- Load listing from file.asm (overwrites current program)
+/read {0xaddress|$register} NUM      -- Read NUM bytes from 0xaddress or $register
+/write {0xaddress|$register} hexdata -- Write bytes to 0xaddress or $register
+/regs                                -- Print register state
+/get register [register... ]         -- Print register state
+/set register value                  -- Set a register
+/reset                               -- Reset the emulator to a clean state
+/run                                 -- Run the current program
+/save file.asm                       -- Save assembly output to file.asm
 
 [[: Config Commands :]] (Use /c or /config)
 NOTE: Run /reset if you are changing emu/* options, otherwise the emulator may not start!
