@@ -56,6 +56,8 @@ scare Help
 /load file.asm                    -- Load listing from file.asm (overwrites current program)
 /read {0xaddress|$register} NUM   -- Read NUM bytes from 0xaddress or $register
 /regs                             -- Print register state
+/get register [register... ]      -- Print register state
+/set register value               -- Set a register
 /reset                            -- Reset the emulator to a clean state
 /run                              -- Run the current program
 /save file.asm                    -- Save assembly output to file.asm
@@ -683,6 +685,14 @@ class scaremu:
                 return reg_out
         except Exception as e:
             self.errPrint("readReg",e)
+    def writeReg(self, regname, v):
+        try:
+            reg_val = self.getReg(regname)
+            if reg_val:
+                reg_out = self.mu_ctx.reg_write(reg_val, v)
+                return reg_out
+        except Exception as e:
+            self.errPrint("writeReg",e)
     def readMem(self, memaddr, size):
         try:
             memout = self.mu_ctx.mem_read(memaddr, size)

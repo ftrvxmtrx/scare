@@ -135,6 +135,30 @@ def parseCmd(cmd, smu):
             else:
                 print("Usage: /read {0xaddress|$register} size")
 
+        if cmdList[0] == "/set":
+            if cmdListLen == 3:
+                try:
+                    regTarget = cmdList[1]
+                    value = int(cmdList[2],0)
+                    smu.writeReg(regTarget, value)
+                except Exception as e:
+                    print(e)
+                    print("Usage: /set register value")
+            else:
+                print("Usage: /set register value")
+
+        if cmdList[0] == "/get":
+            if cmdListLen >= 2:
+                try:
+                    for regTarget in cmdList[1:]:
+                        value = smu.readReg(regTarget)
+                        print(f"{cRegN} {regTarget}: {value:032x}")
+                except Exception as e:
+                    print(e)
+                    print("Usage: /get register [register... ]")
+            else:
+                print("Usage: /get register [register... ]")
+
         if cmdList[0] == "/dis":
             try:
                 if cmdListLen == 3:
