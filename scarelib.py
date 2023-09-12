@@ -621,7 +621,7 @@ class scaremu:
             else:
                 print("Invalid Arch!")
                 return 1
-        except KsError as e:
+        except Exception as e:
             self.errPrint("asm",e)
             return 1
     def dis(self, memaddr, size):
