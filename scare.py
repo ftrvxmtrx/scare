@@ -180,7 +180,8 @@ def parseCmd(cmd, smu):
             try:
                 if cmdListLen == 3:
                     if cmdList[1][0:2] == "0x":
-                        smu.dis(int(cmdList[1],16), int(cmdList[2]))
+                        instructions4dis = smu.dis(int(cmdList[1],16), int(cmdList[2]))
+                        printListing(smu, instructions4dis)
                     elif cmdList[1][0] == "$":
                         regTarget = cmdList[1].split("$")[1]
                         regValue = smu.readReg(regTarget)
