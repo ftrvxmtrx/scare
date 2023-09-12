@@ -647,17 +647,15 @@ class scaremu:
     def run(self):
         runStatus = 1
         try:
-            if self.mu_state == "RUN":
-                self.mu_ctx.emu_stop()
-                self.mu_state = "INIT" # Switch back to initialized
+            self.mu_ctx.emu_stop()
             if self.mu_state == "INIT":
                 self.mu_ctx = Uc(self.mu_arch, self.mu_mode)
                 self.mu_ctx.mem_map(self.base_addr, self.mu_memsize)
-                self.mu_ctx.mem_write(self.base_addr, self.machine_code) # map the code
-                self.mu_ctx.reg_write(self.stack_reg, self.stack_addr) # Initialize Stack
-                eStart = self.mu_ctx.emu_start(self.base_addr, self.base_addr + len(self.machine_code)) # start emulator
-                self.mu_state = "RUN"
-                return self.mu_ctx.reg_read(self.ip_reg), 0
+            self.mu_ctx.mem_write(self.base_addr, self.machine_code) # map the code
+            self.mu_ctx.reg_write(self.stack_reg, self.stack_addr) # Initialize Stack
+            eStart = self.mu_ctx.emu_start(self.base_addr, self.base_addr + len(self.machine_code)) # start emulator
+            self.mu_state = "RUN"
+            return self.mu_ctx.reg_read(self.ip_reg), 0
         except UcError as e:
             self.errPrint("run",e)
             return self.mu_ctx.reg_read(self.ip_reg), 1
