@@ -138,7 +138,11 @@ def parseCmd(cmd, smu):
         if cmdList[0] == "/write":
             if cmdListLen == 3:
                 try:
-                    data = bytes.fromhex(cmdList[2])
+                    if cmdList[2][0] == '.':
+                        with open(cmdList[2], "rb") as f:
+                            data = f.read(-1)
+                    else:
+                        data = bytes.fromhex(cmdList[2])
                     if cmdList[1][0] == "$":
                         regTarget = cmdList[1].split("$")[1]
                         regValue = smu.readReg(regTarget)

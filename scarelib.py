@@ -56,6 +56,7 @@ scare Help
 /load file.asm                       -- Load listing from file.asm (overwrites current program)
 /read {0xaddress|$register} NUM      -- Read NUM bytes from 0xaddress or $register
 /write {0xaddress|$register} hexdata -- Write bytes to 0xaddress or $register
+/write {0xaddress|$register} ./file  -- Write file data to 0xaddress or $register
 /regs                                -- Print register state
 /get register [register... ]         -- Print register state
 /set register value                  -- Set a register
