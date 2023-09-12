@@ -116,15 +116,15 @@ def parseCmd(cmd, smu):
                 try:
                     memout = 0
                     baseAddr = 0
-                    if cmdList[1][0:2] == "0x":
-                        memout = smu.mu_ctx.mem_read(int(cmdList[1],16), int(cmdList[2]))
-                        baseAddr = int(cmdList[1],16)
-                    elif cmdList[1][0] == "$":
+                    if cmdList[1][0] == "$":
                         regTarget = cmdList[1].split("$")[1]
                         regValue = smu.readReg(regTarget)
                         if regValue is not None:
-                            memout = smu.mu_ctx.mem_read(regValue, int(cmdList[2]))
+                            memout = smu.mu_ctx.mem_read(regValue, int(cmdList[2],0))
                             baseAddr = regValue
+                    else:
+                        memout = smu.mu_ctx.mem_read(int(cmdList[1],0), int(cmdList[2],0))
+                        baseAddr = int(cmdList[1],0)
                     if memout:
                         dHex(memout, baseAddr)
                     else:
