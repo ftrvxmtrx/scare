@@ -11,7 +11,7 @@ parser.add_argument('-a', dest='arch', help='Target architecture')
 parser.add_argument('-f', dest='inFile', help='File to read')
 parser.add_argument('--base', type=lambda x: int(x,0), dest='baseaddr', help='Base Address (default: 0x400000)')
 parser.add_argument('--stack', type=lambda x: int(x,0), dest='stackaddr', help='Stack Address (default: 0x401000)')
-parser.add_argument('--memsize', dest='memsize', help='Emulator Memory Size (default: 0x200000 [2MB])')
+parser.add_argument('--memsize', dest='memsize', help='Emulator Memory Size (default: 0x800000 [8MB])')
 
 ## Commands
 cmdQuit = ["/exit", "/x", "/quit", "/q"]
