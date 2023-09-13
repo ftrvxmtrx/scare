@@ -560,7 +560,7 @@ def ksAssemble(ks_arch, ks_mode, CODE):
             print("ERROR: %s" %e)
             return
 
-def printListing(mu, asmInstructions):
+def printListing(mu, asmInstructions, plan9=False):
     addr = sConfig["emu/baseaddr"]
     if len(asmInstructions) == 0:
         print("No instructions!")
@@ -572,6 +572,7 @@ def printListing(mu, asmInstructions):
     asmAssembled = ksAssemble(mu.asm_arch, mu.asm_mode, "; ".join(asmInstructions))
     codeOffs = 0
     lineNum = 1
+    empty = True
     # Predicting that in longer code with short jumps, this append trick will result in incorrect assembly if outside the range of a short jump
     for i in asmInstructions:
         asmStringLen = len(asmAssembled)
@@ -583,7 +584,16 @@ def printListing(mu, asmInstructions):
             assembledAsmLen = 0
         asmBytes = asmAssembled[codeOffs:codeOffs+assembledAsmLen]
         spacing = " "*(lineMax - len(i))
-        print(f"{cLnNum}{lineNum:03d}{cEnd}{cLnPipe}│{cEnd} {cAsmList}{i}{cEnd} {spacing}{cComment}; {addr:04X}: {cBytes}{asmBytes.hex()}{cEnd}")
+        if plan9:
+            if len(i) > 0:
+                print(f"\tWORD $0x{asmBytes[::-1].hex()} // {i}")
+                empty = False
+            else:
+                if not empty:
+                    print("")
+                empty = True
+        else:
+            print(f"{cLnNum}{lineNum:03d}{cEnd}{cLnPipe}│{cEnd} {cAsmList}{i}{cEnd} {spacing}{cComment}; {addr:04X}: {cBytes}{asmBytes.hex()}{cEnd}")
         addr = addr+assembledAsmLen
         codeOffs = codeOffs+assembledAsmLen
         lineNum = lineNum + 1

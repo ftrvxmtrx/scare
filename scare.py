@@ -98,7 +98,7 @@ def parseCmd(cmd, smu):
 
         if cmdList[0] == "/save":
             if cmdListLen > 1:
-                saveAsm(smu.asm_code,cmdList[1])
+                saveAsm(smu.asm_code, cmdList[1])
             else:
                 print("Please specify a filename!")
 
@@ -109,7 +109,7 @@ def parseCmd(cmd, smu):
             shouldAssemble = 3 # Reinitialize 
 
         if cmdList[0] in cmdPList:
-            printListing(smu, smu.asm_code)
+            printListing(smu, smu.asm_code, plan9=("plan9" in cmdList))
 
         if cmdList[0] == "/read":
             if cmdListLen == 3:
