@@ -34,35 +34,38 @@ def printSplash(splashColSet):
 │      ││       │      ││       │──────┘\x1b[38;5;{spc+(mode*18)}m
 └──────┘└──────┘└──────┘└       └──────┘\x1b[0m
 Simple Configurable Asm REPL && Emulator 
-                [v0.3.0]
+                [v0.3.∞]
     """
     print(splash)
 
 helpfile = """
 scare Help
 
-/ /? /help                           -- Open help menu
-/x /exit /q /quit                    -- Quit the program
+/ /? /help                             -- Open help menu
+/x /exit /q /quit                      -- Quit the program
 
-/back n                              -- Go back n number of lines
-/dis {0xaddress|$register} NUM       -- Disassemble NUM bytes from 0xaddress or $register
-/export FILETYPE FILENAME            -- Export machine code as FILETYPE to the FILENAME
-                                        FILETYPE List:
-                                        - bin
-                                        - elf64
-                                        - pe32
-/info                                -- Info about the emulator state
-/l /list                             -- List the current program
-/load file.asm                       -- Load listing from file.asm (overwrites current program)
-/read {0xaddress|$register} NUM      -- Read NUM bytes from 0xaddress or $register
-/write {0xaddress|$register} hexdata -- Write bytes to 0xaddress or $register
-/write {0xaddress|$register} ./file  -- Write file data to 0xaddress or $register
-/regs                                -- Print register state
-/get register [register... ]         -- Print register state
-/set register value                  -- Set a register
-/reset                               -- Reset the emulator to a clean state
-/run                                 -- Run the current program
-/save file.asm                       -- Save assembly output to file.asm
+/back n                                -- Go back n number of lines
+/dis {0xaddress|$register} NUM         -- Disassemble NUM bytes from 0xaddress or $register
+/export FILETYPE FILENAME              -- Export machine code as FILETYPE to the FILENAME
+                                          FILETYPE:
+                                          - bin
+                                          - elf64
+                                          - pe32
+/info                                  -- Info about the emulator state
+/l /list [TYPE]                        -- List the current program
+                                          TYPE:
+                                          - plan9
+/load file.asm                         -- Load listing from file.asm (overwrites current program)
+/read {0xaddress|$register} NUM [FILE] -- Read NUM bytes from 0xaddress or $register
+/write {0xaddress|$register} hexdata   -- Write bytes to 0xaddress or $register
+/write {0xaddress|$register} ./file    -- Write file data to 0xaddress or $register
+                                          Note: path *has* to start with a dot
+/regs                                  -- Print register state
+/get register [register... ]           -- Print register state
+/set register value                    -- Set a register
+/reset                                 -- Reset the emulator to a clean state
+/run                                   -- Run the current program
+/save file.asm                         -- Save assembly output to file.asm
 
 [[: Config Commands :]] (Use /c or /config)
 NOTE: Run /reset if you are changing emu/* options, otherwise the emulator may not start!
@@ -705,12 +708,6 @@ class scaremu:
                 return reg_out
         except Exception as e:
             self.errPrint("writeReg",e)
-    def readMem(self, memaddr, size):
-        try:
-            memout = self.mu_ctx.mem_read(memaddr, size)
-            dHex(memout, memaddr)
-        except Exception as e:
-            self.errPrint("readMem",e)
     def info(self):
         print(f"┌ {cInfo}   arch_name:{cEnd} {self.arch_name}")
         print(f"│ {cInfo}   base_addr:{cEnd} {self.base_addr:08x}")
