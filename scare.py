@@ -112,7 +112,7 @@ def parseCmd(cmd, smu):
             printListing(smu, smu.asm_code, plan9=("plan9" in cmdList))
 
         if cmdList[0] == "/read":
-            if cmdListLen == 3:
+            if cmdListLen >= 3 and cmdListLen <= 4:
                 try:
                     memout = 0
                     baseAddr = 0
@@ -126,7 +126,12 @@ def parseCmd(cmd, smu):
                         memout = smu.mu_ctx.mem_read(int(cmdList[1],0), int(cmdList[2],0))
                         baseAddr = int(cmdList[1],0)
                     if memout:
-                        dHex(memout, baseAddr)
+                        if cmdListLen > 3:
+                            with open(cmdList[3], "wb") as f:
+                                f.truncate()
+                                f.write(memout)
+                        else:
+                            dHex(memout, baseAddr)
                     else:
                         print("Usage: /read {0xaddress|$register} size")
                 except Exception as e:
