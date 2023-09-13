@@ -625,7 +625,7 @@ class scaremu:
             self.mu_ctx = Uc(self.mu_arch, self.mu_mode)# This is the emulator object
             self.mu_ctx.mem_map(self.base_addr, self.mu_memsize)
             self.mu_ctx.reg_write(self.stack_reg, self.stack_addr) # Initialize Stack
-            self.mu_state = "INIT" # The states are INIT, RUN, ERR
+            self.mu_state = "RUN" # The states are INIT, RUN, ERR
         else:
             print("Unsupported Arch")
             return
