@@ -4,13 +4,14 @@ import time
 import sys
 import readline
 import argparse
+import numexpr
 from scarelib import *
 
 parser = argparse.ArgumentParser(description="")
 parser.add_argument('-a', dest='arch', help='Target architecture')
 parser.add_argument('-f', dest='inFile', help='File to read')
-parser.add_argument('--base', type=lambda x: int(x,0), dest='baseaddr', help='Base Address (default: 0x400000)')
-parser.add_argument('--stack', type=lambda x: int(x,0), dest='stackaddr', help='Stack Address (default: 0x401000)')
+parser.add_argument('--base', type=lambda x: parseInt(x), dest='baseaddr', help='Base Address (default: 0x400000)')
+parser.add_argument('--stack', type=lambda x: parseInt(x), dest='stackaddr', help='Stack Address (default: 0x401000)')
 parser.add_argument('--memsize', dest='memsize', help='Emulator Memory Size (default: 0x800000 [8MB])')
 
 ## Commands
@@ -18,6 +19,9 @@ cmdQuit = ["/exit", "/x", "/quit", "/q"]
 cmdHelp = ["/", "/help", "/?", "/h"]
 cmdConf = ["/config", "/c"]
 cmdPList= ["/list", "/l"]
+
+def parseInt(x):
+    return int(numexpr.evaluate(x).item())
 
 # parseCmd
 # Commands must start with / to be parsed
@@ -53,7 +57,7 @@ def parseCmd(cmd, smu):
                             else:
                                 print(f"Invalid arch! Supported arches: {archez.keys()}")
                         else:
-                            sConfig[cfgOptName] = int(cfgOptVal, 16) # Only support hex rn
+                            sConfig[cfgOptName] = parseInt(cfgOptVal)
                     else:
                         print("Invalid config opt name!")
                 except:
@@ -81,7 +85,7 @@ def parseCmd(cmd, smu):
                 print("No emulator running!")
 
         if cmdList[0] == "/back":
-            backAmount = int(cmdList[1])
+            backAmount = parseInt(cmdList[1])
             if backAmount <= len(smu.asm_code):
                 smu.asm_code = smu.asm_code[:-backAmount]
                 print(f"Moved back {backAmount} lines to line {len(smu.asm_code)}")
@@ -120,11 +124,11 @@ def parseCmd(cmd, smu):
                         regTarget = cmdList[1].split("$")[1]
                         regValue = smu.readReg(regTarget)
                         if regValue is not None:
-                            memout = smu.mu_ctx.mem_read(regValue, int(cmdList[2],0))
+                            memout = smu.mu_ctx.mem_read(regValue, parseInt(cmdList[2]))
                             baseAddr = regValue
                     else:
-                        memout = smu.mu_ctx.mem_read(int(cmdList[1],0), int(cmdList[2],0))
-                        baseAddr = int(cmdList[1],0)
+                        baseAddr = parseInt(cmdList[1])
+                        memout = smu.mu_ctx.mem_read(baseAddr, parseInt(cmdList[2]))
                     if memout:
                         if cmdListLen > 3:
                             with open(cmdList[3], "wb") as f:
@@ -155,7 +159,7 @@ def parseCmd(cmd, smu):
                         if regValue is not None:
                             smu.mu_ctx.mem_write(regValue, data)
                     else:
-                        memout = smu.mu_ctx.mem_write(int(cmdList[1],0), data)
+                        memout = smu.mu_ctx.mem_write(parseInt(cmdList[1]), data)
                 except Exception as e:
                     print(e)
                     print("Usage: /write {0xaddress|$register} hexdata")
@@ -166,7 +170,7 @@ def parseCmd(cmd, smu):
             if cmdListLen == 3:
                 try:
                     regTarget = cmdList[1]
-                    value = int(cmdList[2],0)
+                    value = parseInt(cmdList[2])
                     smu.writeReg(regTarget, value)
                 except Exception as e:
                     print(e)
@@ -190,13 +194,13 @@ def parseCmd(cmd, smu):
             try:
                 if cmdListLen == 3:
                     if cmdList[1][0:2] == "0x":
-                        instructions4dis = smu.dis(int(cmdList[1],16), int(cmdList[2]))
+                        instructions4dis = smu.dis(parseInt(cmdList[1]), parseInt(cmdList[2]))
                         printListing(smu, instructions4dis)
                     elif cmdList[1][0] == "$":
                         regTarget = cmdList[1].split("$")[1]
                         regValue = smu.readReg(regTarget)
                         if regValue is not None:
-                            instructions4dis = smu.dis(regValue, int(cmdList[2]))
+                            instructions4dis = smu.dis(regValue, parseInt(cmdList[2]))
                             printListing(smu, instructions4dis)
                     else:
                         print("Usage: /dis {0xaddress|$register} size")

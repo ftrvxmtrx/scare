@@ -4,6 +4,7 @@ stdenv.mkDerivation {
  buildInputs = with python3Packages; [
   capstone
   keystone-engine
+  numexpr
   unicorn
  ];
 }
