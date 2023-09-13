@@ -146,6 +146,7 @@ def parseCmd(cmd, smu):
                     if cmdList[2][0] == '.':
                         with open(cmdList[2], "rb") as f:
                             data = f.read(-1)
+                            print(f"{cmdList[2]}: {len(data)} bytes")
                     else:
                         data = bytes.fromhex(cmdList[2])
                     if cmdList[1][0] == "$":
