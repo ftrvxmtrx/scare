@@ -589,7 +589,10 @@ def printListing(mu, asmInstructions, plan9=False):
         spacing = " "*(lineMax - len(i))
         if plan9:
             if len(i) > 0:
-                print(f"\tWORD $0x{asmBytes[::-1].hex()} // {i}")
+                if len(asmBytes) > 0:
+                    print(f"\tWORD $0x{asmBytes[::-1].hex()} // {i}")
+                else:
+                    print(f"{i}")
                 empty = False
             else:
                 if not empty:
