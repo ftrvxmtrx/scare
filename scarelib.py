@@ -613,11 +613,13 @@ class scaremu:
             self.dis_mode  = archez[inArch]["dis"]["capstone"]["mode"]
             self.base_addr = sConfig["emu/baseaddr"]
             self.stack_addr = sConfig["emu/stackaddr"]
+            self.mu_memsize = sConfig["emu/memsize"]
             self.asm_code = [] # Holds the source code
             self.machine_code = b"" # The machine code
             self.mu_ctx = Uc(self.mu_arch, self.mu_mode)# This is the emulator object
+            self.mu_ctx.mem_map(self.base_addr, self.mu_memsize)
+            self.mu_ctx.reg_write(self.stack_reg, self.stack_addr) # Initialize Stack
             self.mu_state = "INIT" # The states are INIT, RUN, ERR
-            self.mu_memsize = sConfig["emu/memsize"]
         else:
             print("Unsupported Arch")
             return
