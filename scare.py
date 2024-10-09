@@ -240,7 +240,6 @@ def parseCmd(cmd, smu):
     return shouldAssemble
 
 if __name__ == '__main__':
-    printSplash("cerulean")
     args = parser.parse_args()
     print("Type / for help\n")
     inFile = args.inFile if args.inFile else ""
@@ -261,6 +260,7 @@ if __name__ == '__main__':
         currentAddr = sConfig["emu/baseaddr"]
         if inFile:
             smu.asm_code = loadAsm(inFile)
+    printSplash()
     while True:
         try:
             cmd = input(f"[{cArchP}{currentArch}]{cIP}{currentAddr:02x}{cEnd}> ")
@@ -280,7 +280,7 @@ if __name__ == '__main__':
                 smu = scaremu(sConfig["emu/arch"])
                 currentArch = sConfig["emu/arch"]
                 currentAddr = sConfig["emu/baseaddr"]
-            if shouldAsm:
+            if smu != False and shouldAsm:
                 if shouldAsm == 1:
                     smu.asm_code.append(cmd)
                 if len(smu.asm_code) > 0:

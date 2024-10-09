@@ -9,34 +9,15 @@ import capstone
 from scareconfig import *
 import random
 
-def printSplash(splashColSet):
-    splashColz = {
-    "litepink": (213, 1), 
-    "furnace":  (196, 1),
-    "aqua":     (27,  1),
-    "cerulean": (87,  6),
-    "xyber":    (28,  1),
-    "sunrise":  (208, 1),
-    "haunter":  (103, 6),
-    "mew":      (170, 1),
-    "articuno": (63,  1),
-    "esp":      (63,  6),
-    "grey":     (236, 1),
-    }
-    if splashColSet == "random":
-        splashColSet = random.choice(list(splashColz.items()))
-        splashColSet = splashColSet[0]
-    spc  = splashColz[splashColSet][0]
-    mode = splashColz[splashColSet][1] # 1 or 6, 6 would do columns, from 1 to 87
-    splash = f"""\x1b[38;5;{spc}m\
-┌──────┐┌──────┐┌──────┐┌──────┐┌──────┐\x1b[38;5;{spc+(mode*6)}m
-└──────┐│       ┌──────││       │      │\x1b[38;5;{spc+(mode*12)}m
-│      ││       │      ││       │──────┘\x1b[38;5;{spc+(mode*18)}m
-└──────┘└──────┘└──────┘└       └──────┘\x1b[0m
+def printSplash():
+    print("""\
+┌──────┐┌──────┐┌──────┐┌──────┐┌──────┐
+└──────┐│       ┌──────││       │      │
+│      ││       │      ││       │──────┘
+└──────┘└──────┘└──────┘└       └──────┘
 Simple Configurable Asm REPL && Emulator 
                 [v0.3.∞]
-    """
-    print(splash)
+    """)
 
 helpfile = """
 scare Help
