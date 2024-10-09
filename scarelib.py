@@ -463,13 +463,17 @@ def dHex(inBytes,baseAddr):
         offs = offs + 16
 
 # loadAsm - Load assembly listing from a file
-def loadAsm(fname):
+def loadAsm(fname, cmdf):
     with open(fname,"r") as f:
         outt = f.read().splitlines()
         f.close()
     out = []
     for oLine in outt:
-        out.append(oLine.split(";")[0]) # Splits out comments
+        s = oLine.split(";")[0] # Splits out comments
+        if s.startswith("/"):
+            cmdf(s)
+        else:
+            out.append(s)
     print(f"Loaded {fname}")
     return out
 

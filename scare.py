@@ -95,7 +95,7 @@ def parseCmd(cmd, smu):
 
         if cmdList[0] == "/load":
             if cmdListLen > 1:
-                smu.asm_code = loadAsm(cmdList[1])
+                smu.asm_code = loadAsm(cmdList[1], lambda c: parseCmd(c, smu))
                 currentAddr = sConfig["emu/baseaddr"]
             else:
                 print("Please specify a filename!")
@@ -259,7 +259,7 @@ if __name__ == '__main__':
         smu = scaremu(currentArch)
         currentAddr = sConfig["emu/baseaddr"]
         if inFile:
-            smu.asm_code = loadAsm(inFile)
+            smu.asm_code = loadAsm(inFile, lambda c: parseCmd(c, smu))
     printSplash()
     while True:
         try:
