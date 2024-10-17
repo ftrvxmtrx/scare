@@ -471,10 +471,10 @@ def loadAsm(fname, cmdf):
         f.close()
     out = []
     for oLine in outt:
-        s = oLine.split(";")[0] # Splits out comments
+        s = oLine.split(";")[0].strip() # Splits out comments
         if s.startswith("/"):
             cmdf(s)
-        else:
+        elif s != "":
             out.append(s)
     print(f"Loaded {fname}")
     return out
