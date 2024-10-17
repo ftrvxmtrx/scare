@@ -440,6 +440,8 @@ archez = {
     },
 }
 
+archez["amd64"] = archez["x64"]
+
 ### Helper Functions ###########################################################
 def configPrint(sConfig):
     print("Current Config Options")
