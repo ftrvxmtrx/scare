@@ -5,6 +5,7 @@ sConfig = {
     "emu/arch" : "NoArch",
     "emu/cpu": "",
     "x86/xmm": 0,
+    "x86/ymm": 0,
     "arm64/neon": 0,
 }
 

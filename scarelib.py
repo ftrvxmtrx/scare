@@ -55,6 +55,7 @@ NOTE: Run /reset if you are changing emu/* options, otherwise the emulator may n
 /c emu/arch      -- Print Arch Value
 /c emu/arch x64  -- Set Arch to x64
 /c x86/xmm 1     -- Enable x86/xmm
+/c x86/ymm 1     -- Enable x86/ymm
 /c arm64/neon 1  -- Enable arm64/neon
 """
 
@@ -216,6 +217,40 @@ rNames = {
         "xmm30": UC_X86_REG_XMM30,
         "xmm31": UC_X86_REG_XMM31,
     },
+    "ymm": {
+        "ymm0":  UC_X86_REG_YMM0,
+        "ymm1":  UC_X86_REG_YMM1,
+        "ymm2":  UC_X86_REG_YMM2,
+        "ymm3":  UC_X86_REG_YMM3,
+        "ymm4":  UC_X86_REG_YMM4,
+        "ymm5":  UC_X86_REG_YMM5,
+        "ymm6":  UC_X86_REG_YMM6,
+        "ymm7":  UC_X86_REG_YMM7,
+        "ymm8":  UC_X86_REG_YMM8,
+        "ymm9":  UC_X86_REG_YMM9,
+        "ymm10": UC_X86_REG_YMM10,
+        "ymm11": UC_X86_REG_YMM11,
+        "ymm12": UC_X86_REG_YMM12,
+        "ymm13": UC_X86_REG_YMM13,
+        "ymm14": UC_X86_REG_YMM14,
+        "ymm15": UC_X86_REG_YMM15,
+        "ymm16": UC_X86_REG_YMM16,
+        "ymm17": UC_X86_REG_YMM17,
+        "ymm18": UC_X86_REG_YMM18,
+        "ymm19": UC_X86_REG_YMM19,
+        "ymm20": UC_X86_REG_YMM20,
+        "ymm21": UC_X86_REG_YMM21,
+        "ymm22": UC_X86_REG_YMM22,
+        "ymm23": UC_X86_REG_YMM23,
+        "ymm24": UC_X86_REG_YMM24,
+        "ymm25": UC_X86_REG_YMM25,
+        "ymm26": UC_X86_REG_YMM26,
+        "ymm27": UC_X86_REG_YMM27,
+        "ymm28": UC_X86_REG_YMM28,
+        "ymm29": UC_X86_REG_YMM29,
+        "ymm30": UC_X86_REG_YMM30,
+        "ymm31": UC_X86_REG_YMM31,
+    },
 }
 
 # regFmt - Format register for output
@@ -247,6 +282,8 @@ def regFmt(mu, regType, regSize, regName):
         outRegValFmt = f"{outRegVal:016x}"
     elif regSize == 128:
         outRegValFmt = f"{outRegVal:032x}"
+    elif regSize == 256:
+        outRegValFmt = f"{outRegVal:064x}"
     else:
         print("Unknown Register Size!")
         return
@@ -309,22 +346,24 @@ def printRegs_x86(mu, sConfig):
         printRegs_XMM(mu, sConfig)
 
 def printRegs_XMM(mu, sConfig):
-    print(f"{cRegN} xmm0: {regFmt(mu,0,128,rNames['xmm']['xmm0'] )} {cRegN}xmm16: {regFmt(mu,0,128,rNames['xmm']['xmm16'])}")
-    print(f"{cRegN} xmm1: {regFmt(mu,0,128,rNames['xmm']['xmm1'] )} {cRegN}xmm17: {regFmt(mu,0,128,rNames['xmm']['xmm17'])}")
-    print(f"{cRegN} xmm2: {regFmt(mu,0,128,rNames['xmm']['xmm2'] )} {cRegN}xmm18: {regFmt(mu,0,128,rNames['xmm']['xmm18'])}")
-    print(f"{cRegN} xmm3: {regFmt(mu,0,128,rNames['xmm']['xmm3'] )} {cRegN}xmm19: {regFmt(mu,0,128,rNames['xmm']['xmm19'])}")
-    print(f"{cRegN} xmm4: {regFmt(mu,0,128,rNames['xmm']['xmm4'] )} {cRegN}xmm20: {regFmt(mu,0,128,rNames['xmm']['xmm20'])}")
-    print(f"{cRegN} xmm5: {regFmt(mu,0,128,rNames['xmm']['xmm5'] )} {cRegN}xmm21: {regFmt(mu,0,128,rNames['xmm']['xmm21'])}")
-    print(f"{cRegN} xmm6: {regFmt(mu,0,128,rNames['xmm']['xmm6'] )} {cRegN}xmm22: {regFmt(mu,0,128,rNames['xmm']['xmm22'])}")
-    print(f"{cRegN} xmm7: {regFmt(mu,0,128,rNames['xmm']['xmm7'] )} {cRegN}xmm23: {regFmt(mu,0,128,rNames['xmm']['xmm23'])}")
-    print(f"{cRegN} xmm8: {regFmt(mu,0,128,rNames['xmm']['xmm8'] )} {cRegN}xmm24: {regFmt(mu,0,128,rNames['xmm']['xmm24'])}")
-    print(f"{cRegN} xmm9: {regFmt(mu,0,128,rNames['xmm']['xmm9'] )} {cRegN}xmm25: {regFmt(mu,0,128,rNames['xmm']['xmm25'])}")
-    print(f"{cRegN}xmm10: {regFmt(mu,0,128,rNames['xmm']['xmm10'])} {cRegN}xmm26: {regFmt(mu,0,128,rNames['xmm']['xmm26'])}")
-    print(f"{cRegN}xmm11: {regFmt(mu,0,128,rNames['xmm']['xmm11'])} {cRegN}xmm27: {regFmt(mu,0,128,rNames['xmm']['xmm27'])}")
-    print(f"{cRegN}xmm12: {regFmt(mu,0,128,rNames['xmm']['xmm12'])} {cRegN}xmm28: {regFmt(mu,0,128,rNames['xmm']['xmm28'])}")
-    print(f"{cRegN}xmm13: {regFmt(mu,0,128,rNames['xmm']['xmm13'])} {cRegN}xmm29: {regFmt(mu,0,128,rNames['xmm']['xmm29'])}")
-    print(f"{cRegN}xmm14: {regFmt(mu,0,128,rNames['xmm']['xmm14'])} {cRegN}xmm30: {regFmt(mu,0,128,rNames['xmm']['xmm30'])}")
-    print(f"{cRegN}xmm15: {regFmt(mu,0,128,rNames['xmm']['xmm15'])} {cRegN}xmm31: {regFmt(mu,0,128,rNames['xmm']['xmm31'])}")
+    print(f"{cRegN} xmm0: {regFmt(mu,0,128,rNames['xmm']['xmm0'] )} {cRegN} xmm8: {regFmt(mu,0,128,rNames['xmm']['xmm8'] )}")
+    print(f"{cRegN} xmm1: {regFmt(mu,0,128,rNames['xmm']['xmm1'] )} {cRegN} xmm9: {regFmt(mu,0,128,rNames['xmm']['xmm9'])}")
+    print(f"{cRegN} xmm2: {regFmt(mu,0,128,rNames['xmm']['xmm2'] )} {cRegN}xmm10: {regFmt(mu,0,128,rNames['xmm']['xmm10'])}")
+    print(f"{cRegN} xmm3: {regFmt(mu,0,128,rNames['xmm']['xmm3'] )} {cRegN}xmm11: {regFmt(mu,0,128,rNames['xmm']['xmm11'])}")
+    print(f"{cRegN} xmm4: {regFmt(mu,0,128,rNames['xmm']['xmm4'] )} {cRegN}xmm12: {regFmt(mu,0,128,rNames['xmm']['xmm12'])}")
+    print(f"{cRegN} xmm5: {regFmt(mu,0,128,rNames['xmm']['xmm5'] )} {cRegN}xmm13: {regFmt(mu,0,128,rNames['xmm']['xmm13'])}")
+    print(f"{cRegN} xmm6: {regFmt(mu,0,128,rNames['xmm']['xmm6'] )} {cRegN}xmm14: {regFmt(mu,0,128,rNames['xmm']['xmm14'])}")
+    print(f"{cRegN} xmm7: {regFmt(mu,0,128,rNames['xmm']['xmm7'] )} {cRegN}xmm15: {regFmt(mu,0,128,rNames['xmm']['xmm15'])}")
+
+def printRegs_YMM(mu, sConfig):
+    print(f"{cRegN} ymm0: {regFmt(mu,0,256,rNames['ymm']['ymm0'] )} {cRegN} ymm8: {regFmt(mu,0,256,rNames['ymm']['ymm8'] )}")
+    print(f"{cRegN} ymm1: {regFmt(mu,0,256,rNames['ymm']['ymm1'] )} {cRegN} ymm9: {regFmt(mu,0,256,rNames['ymm']['ymm9'])}")
+    print(f"{cRegN} ymm2: {regFmt(mu,0,256,rNames['ymm']['ymm2'] )} {cRegN}ymm10: {regFmt(mu,0,256,rNames['ymm']['ymm10'])}")
+    print(f"{cRegN} ymm3: {regFmt(mu,0,256,rNames['ymm']['ymm3'] )} {cRegN}ymm11: {regFmt(mu,0,256,rNames['ymm']['ymm11'])}")
+    print(f"{cRegN} ymm4: {regFmt(mu,0,256,rNames['ymm']['ymm4'] )} {cRegN}ymm12: {regFmt(mu,0,256,rNames['ymm']['ymm12'])}")
+    print(f"{cRegN} ymm5: {regFmt(mu,0,256,rNames['ymm']['ymm5'] )} {cRegN}ymm13: {regFmt(mu,0,256,rNames['ymm']['ymm13'])}")
+    print(f"{cRegN} ymm6: {regFmt(mu,0,256,rNames['ymm']['ymm6'] )} {cRegN}ymm14: {regFmt(mu,0,256,rNames['ymm']['ymm14'])}")
+    print(f"{cRegN} ymm7: {regFmt(mu,0,256,rNames['ymm']['ymm7'] )} {cRegN}ymm15: {regFmt(mu,0,256,rNames['ymm']['ymm15'])}")
 
 def printRegs_x64(mu, sConfig):
     print(f"{cRegN}rax: {regFmt(mu,0,64,rNames['x64']['rax'])} {cRegN}rip: {regFmt(mu,1,64,rNames['x64']['rip'])} {cRegN}r11: {regFmt(mu,0,64,rNames['x64']['r11'])}")
@@ -336,6 +375,8 @@ def printRegs_x64(mu, sConfig):
     print(cEnd,end="")
     if sConfig["x86/xmm"]:
         printRegs_XMM(mu, sConfig)
+    if sConfig["x86/ymm"]:
+        printRegs_YMM(mu, sConfig)
 
 archez = {
     "x64": {
