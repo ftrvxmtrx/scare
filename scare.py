@@ -5,6 +5,7 @@ import sys
 import readline
 import argparse
 import numexpr
+import traceback
 from scarelib import *
 
 parser = argparse.ArgumentParser(description="")
@@ -69,15 +70,17 @@ def parseCmd(cmd, smu):
                             sConfig[cfgOptName] = parseInt(cfgOptVal)
                     else:
                         print("Invalid config opt name!")
-                except:
-                    print("Error in /config")
+                except Exception as e:
+                    print(f"Error in /config:")
+                    print(traceback.format_exc())
             elif cmdListLen == 2:
                 try:
                     cfgOptName = cmdList[1]
                     if cfgOptName in sConfig.keys():
                         print(f"{cfgOptName} = {sConfig[cfgOptName]}")
-                except:
-                    print("Error in /config")
+                except Exception as e:
+                    print(f"Error in /config:")
+                    print(traceback.format_exc())
             else:
                 configPrint(sConfig)
 
