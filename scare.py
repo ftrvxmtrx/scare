@@ -9,6 +9,7 @@ from scarelib import *
 
 parser = argparse.ArgumentParser(description="")
 parser.add_argument('-a', dest='arch', help='Target architecture')
+parser.add_argument('-c', dest='cpu', help='Target cpu')
 parser.add_argument('-f', dest='inFile', help='File to read')
 parser.add_argument('--base', type=lambda x: parseInt(x), dest='baseaddr', help='Base Address (default: 0x400000)')
 parser.add_argument('--stack', type=lambda x: parseInt(x), dest='stackaddr', help='Stack Address (default: 0x401000)')
@@ -44,16 +45,24 @@ def parseCmd(cmd, smu):
             print(helpfile)
 
         if cmdList[0] in cmdConf:
-            if cmdListLen == 3:
+            if cmdListLen == 3 or cmdListLen == 4:
                 try:
                     cfgOptName = cmdList[1]
                     cfgOptVal = cmdList[2]
+                    cfgOptExtra = cmdList[3] if cmdListLen == 4 else ""
                     if cfgOptName in sConfig.keys():
-                        print(f"{cfgOptName}->{cfgOptVal}")
+                        third = ("/"+cfgOptExtra) if cfgOptExtra != "" else ""
+                        print(f"{cfgOptName}->{cfgOptVal}{third}")
                         # TODO: Keep better track of config option types
                         if cfgOptName == "emu/arch":
-                            if cfgOptVal in archez.keys():
-                                sConfig[cfgOptName] = cfgOptVal
+                            okArch = cfgOptVal in archez.keys()
+                            if okArch:
+                                arch = archez[cfgOptVal]
+                                if cfgOptExtra in arch["cpus"].keys():
+                                    sConfig[cfgOptName] = cfgOptVal
+                                    sConfig["emu/cpu"] = cfgOptExtra
+                                else:
+                                    print(f"Invalid cpu! Supported cpus: {arch["cpus"].keys()}")
                             else:
                                 print(f"Invalid arch! Supported arches: {archez.keys()}")
                         else:
@@ -244,6 +253,7 @@ if __name__ == '__main__':
     print("Type / for help\n")
     inFile = args.inFile if args.inFile else ""
     currentArch = args.arch.lower() if args.arch else "NoArch"
+    currentCpu = args.cpu.lower() if args.cpu else ""
     if args.stackaddr:
         sConfig["emu/stackaddr"] = args.stackaddr
     if args.baseaddr:
@@ -256,7 +266,8 @@ if __name__ == '__main__':
         currentAddr = sConfig["emu/baseaddr"]
     else:
         sConfig["emu/arch"] = currentArch
-        smu = scaremu(currentArch)
+        sConfig["emu/cpu"] = currentCpu
+        smu = scaremu(currentArch, currentCpu)
         currentAddr = sConfig["emu/baseaddr"]
         if inFile:
             smu.asm_code = loadAsm(inFile, lambda c: parseCmd(c, smu))
@@ -268,18 +279,13 @@ if __name__ == '__main__':
                 shouldAsm = parseCmd(cmd, smu)
             except:
                 continue
-            if ( smu == False ) and (sConfig["emu/arch"] != "NoArch"): 
-                smu = scaremu(sConfig["emu/arch"])
+            if    (((smu == False) and (sConfig["emu/arch"] != "NoArch")) or
+                   sConfig["emu/arch"] != currentArch or
+                   shouldAsm == 3):
                 currentArch = sConfig["emu/arch"]
+                currentCpu = sConfig["emu/cpu"]
                 currentAddr = sConfig["emu/baseaddr"]
-            if sConfig["emu/arch"] != currentArch:
-                smu = scaremu(sConfig["emu/arch"])
-                currentArch = sConfig["emu/arch"]
-                currentAddr = sConfig["emu/baseaddr"]
-            if shouldAsm == 3:
-                smu = scaremu(sConfig["emu/arch"])
-                currentArch = sConfig["emu/arch"]
-                currentAddr = sConfig["emu/baseaddr"]
+                smu = scaremu(currentArch, currentCpu)
             if smu != False and shouldAsm:
                 if shouldAsm == 1:
                     smu.asm_code.append(cmd)

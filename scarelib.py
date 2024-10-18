@@ -362,6 +362,47 @@ archez = {
         "funcs": {
             "reg_state": printRegs_x64,
         },
+        "cpus": {
+            "": None,
+            "qemu64": UC_CPU_X86_QEMU64,
+            "phenom": UC_CPU_X86_PHENOM,
+            "core2duo": UC_CPU_X86_CORE2DUO,
+            "kvm64": UC_CPU_X86_KVM64,
+            "qemu32": UC_CPU_X86_QEMU32,
+            "kvm32": UC_CPU_X86_KVM32,
+            "coreduo": UC_CPU_X86_COREDUO,
+            "486": UC_CPU_X86_486,
+            "pentium": UC_CPU_X86_PENTIUM,
+            "pentium2": UC_CPU_X86_PENTIUM2,
+            "pentium3": UC_CPU_X86_PENTIUM3,
+            "athlon": UC_CPU_X86_ATHLON,
+            "n270": UC_CPU_X86_N270,
+            "conroe": UC_CPU_X86_CONROE,
+            "penryn": UC_CPU_X86_PENRYN,
+            "nehalem": UC_CPU_X86_NEHALEM,
+            "westmere": UC_CPU_X86_WESTMERE,
+            "sandybridge": UC_CPU_X86_SANDYBRIDGE,
+            "ivybridge": UC_CPU_X86_IVYBRIDGE,
+            "haswell": UC_CPU_X86_HASWELL,
+            "broadwell": UC_CPU_X86_BROADWELL,
+            "skylake_client": UC_CPU_X86_SKYLAKE_CLIENT,
+            "skylake_server": UC_CPU_X86_SKYLAKE_SERVER,
+            "cascadelake_server": UC_CPU_X86_CASCADELAKE_SERVER,
+            "cooperlake": UC_CPU_X86_COOPERLAKE,
+            "icelake_client": UC_CPU_X86_ICELAKE_CLIENT,
+            "icelake_server": UC_CPU_X86_ICELAKE_SERVER,
+            "denverton": UC_CPU_X86_DENVERTON,
+            "snowridge": UC_CPU_X86_SNOWRIDGE,
+            "knightsmill": UC_CPU_X86_KNIGHTSMILL,
+            "opteron_g1": UC_CPU_X86_OPTERON_G1,
+            "opteron_g2": UC_CPU_X86_OPTERON_G2,
+            "opteron_g3": UC_CPU_X86_OPTERON_G3,
+            "opteron_g4": UC_CPU_X86_OPTERON_G4,
+            "opteron_g5": UC_CPU_X86_OPTERON_G5,
+            "epyc": UC_CPU_X86_EPYC,
+            "dhyana": UC_CPU_X86_DHYANA,
+            "epyc_rome": UC_CPU_X86_EPYC_ROME,
+        },
     },
     "x86": {
         "emu": {
@@ -412,6 +453,13 @@ archez = {
         "funcs": {
             "reg_state": printRegs_arm64,
         },
+        "cpus": {
+            "": None,
+            "a57": UC_CPU_ARM64_A57,
+            "a53": UC_CPU_ARM64_A53,
+            "a72": UC_CPU_ARM64_A72,
+            "max": UC_CPU_ARM64_MAX,
+        },
     },
     "arm32": {
         "emu": {
@@ -437,10 +485,48 @@ archez = {
         "funcs": {
             "reg_state": printRegs_arm32,
         },
+        "cpus": {
+            "": None,
+            "926": UC_CPU_ARM_926,
+            "946": UC_CPU_ARM_946,
+            "1026": UC_CPU_ARM_1026,
+            "1136_r2": UC_CPU_ARM_1136_R2,
+            "1136": UC_CPU_ARM_1136,
+            "1176": UC_CPU_ARM_1176,
+            "11mpcore": UC_CPU_ARM_11MPCORE,
+            "cortex_m0": UC_CPU_ARM_CORTEX_M0,
+            "cortex_m3": UC_CPU_ARM_CORTEX_M3,
+            "cortex_m4": UC_CPU_ARM_CORTEX_M4,
+            "cortex_m7": UC_CPU_ARM_CORTEX_M7,
+            "cortex_m33": UC_CPU_ARM_CORTEX_M33,
+            "cortex_r5": UC_CPU_ARM_CORTEX_R5,
+            "cortex_r5f": UC_CPU_ARM_CORTEX_R5F,
+            "cortex_a7": UC_CPU_ARM_CORTEX_A7,
+            "cortex_a8": UC_CPU_ARM_CORTEX_A8,
+            "cortex_a9": UC_CPU_ARM_CORTEX_A9,
+            "cortex_a15": UC_CPU_ARM_CORTEX_A15,
+            "ti925t": UC_CPU_ARM_TI925T,
+            "sa1100": UC_CPU_ARM_SA1100,
+            "sa1110": UC_CPU_ARM_SA1110,
+            "pxa250": UC_CPU_ARM_PXA250,
+            "pxa255": UC_CPU_ARM_PXA255,
+            "pxa260": UC_CPU_ARM_PXA260,
+            "pxa261": UC_CPU_ARM_PXA261,
+            "pxa262": UC_CPU_ARM_PXA262,
+            "pxa270": UC_CPU_ARM_PXA270,
+            "pxa270a0": UC_CPU_ARM_PXA270A0,
+            "pxa270a1": UC_CPU_ARM_PXA270A1,
+            "pxa270b0": UC_CPU_ARM_PXA270B0,
+            "pxa270b1": UC_CPU_ARM_PXA270B1,
+            "pxa270c0": UC_CPU_ARM_PXA270C0,
+            "pxa270c5": UC_CPU_ARM_PXA270C5,
+            "max": UC_CPU_ARM_MAX,
+        },
     },
 }
 
 archez["amd64"] = archez["x64"]
+archez["x86"]["cpus"] = archez["x64"]["cpus"]
 
 ### Helper Functions ###########################################################
 def configPrint(sConfig):
@@ -593,11 +679,13 @@ def printListing(mu, asmInstructions, plan9=False):
 
 ##### Main Class 
 class scaremu:
-    def __init__(self, inArch):
-        if inArch in archez.keys():
+    def __init__(self, inArch, cpu):
+        if inArch in archez.keys() and cpu in archez[inArch]["cpus"].keys():
             self.arch_name = inArch.lower()
+            self.cpu       = cpu
             self.mu_arch   = archez[inArch]["emu"]["unicorn"]["arch"]
             self.mu_mode   = archez[inArch]["emu"]["unicorn"]["mode"]
+            self.mu_cpu    = archez[inArch]["cpus"][cpu]
             self.stack_reg = archez[inArch]["emu"]["unicorn"]["stack_reg"]
             self.ip_reg    = archez[inArch]["emu"]["unicorn"]["ip_reg"]
             self.asm_arch  = archez[inArch]["asm"]["keystone"]["arch"]
@@ -609,16 +697,16 @@ class scaremu:
             self.mu_memsize = sConfig["emu/memsize"]
             self.asm_code = [] # Holds the source code
             self.machine_code = b"" # The machine code
-            self.mu_ctx = Uc(self.mu_arch, self.mu_mode)# This is the emulator object
+            self.mu_ctx = Uc(self.mu_arch, self.mu_mode, self.mu_cpu) # This is the emulator object
             self.mu_ctx.mem_map(self.base_addr, self.mu_memsize)
             self.mu_ctx.reg_write(self.stack_reg, self.stack_addr) # Initialize Stack
             self.mu_state = "RUN" # The states are INIT, RUN, ERR
         else:
-            print("Unsupported Arch")
+            print("Unsupported arch/cpu")
             return
-    def errPrint(self,eFunc, eMsg):
+    def errPrint(self, eFunc, eMsg):
         print(f"{cErr}[[: {eFunc} Error :]]{cEnd}\n{eMsg}")
-    def asm(self,asm_code):
+    def asm(self, asm_code):
         try:
             if self.arch_name in archez.keys():
                 ks = Ks(self.asm_arch, self.asm_mode)
@@ -679,7 +767,7 @@ class scaremu:
         if not regname in rNames[arch]:
             if arch == "arm64":
                 arch = "neon"
-            elif arch == "x86" or arch == "x64":
+            elif arch == "x86" or arch == "x64" or arch == "amd64":
                 arch = "xmm"
         return rNames[arch][regname]
     def readReg(self, regname):
@@ -700,6 +788,7 @@ class scaremu:
             self.errPrint("writeReg",e)
     def info(self):
         print(f"┌ {cInfo}   arch_name:{cEnd} {self.arch_name}")
+        print(f"│ {cInfo}         cpu:{cEnd} {self.cpu}")
         print(f"│ {cInfo}   base_addr:{cEnd} {self.base_addr:08x}")
         print(f"│ {cInfo}  stack_addr:{cEnd} {self.stack_addr:08x}")
         print(f"│ {cInfo}    mem_size:{cEnd} {self.mu_memsize:08x}")

@@ -3,6 +3,7 @@ sConfig = {
     "emu/stackaddr": 0x401000,
     "emu/memsize":   0x800000,
     "emu/arch" : "NoArch",
+    "emu/cpu": "",
     "x86/xmm": 0,
     "arm64/neon": 0,
 }
